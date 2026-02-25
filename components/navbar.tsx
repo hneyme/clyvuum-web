@@ -161,7 +161,7 @@ export function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-x-0 top-14 z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950/80 backdrop-blur-2xl border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              className="absolute inset-x-0 top-14 z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950/98 backdrop-blur-2xl border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             >
               {navItems.map((item) => (
                 <button

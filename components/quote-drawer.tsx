@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Icon } from "@iconify/react"
 import { cn } from "@/lib/utils"
 import {
@@ -68,7 +67,6 @@ interface FormData {
   timeline: string
   appointmentDate: Date | undefined
   appointmentTime: string
-  acceptTerms: boolean
 }
 
 const initialFormData: FormData = {
@@ -89,7 +87,6 @@ const initialFormData: FormData = {
   timeline: "",
   appointmentDate: undefined,
   appointmentTime: "",
-  acceptTerms: false,
 }
 
 const toolOptions: ToolOption[] = [
@@ -770,22 +767,7 @@ function DetailsStep({
         </div>
       </div>
 
-      <div className="flex items-start gap-3 pt-2">
-        <Checkbox
-          id="acceptTerms"
-          checked={formData.acceptTerms}
-          onCheckedChange={(checked) =>
-            updateField("acceptTerms", checked === true)
-          }
-        />
-        <Label
-          htmlFor="acceptTerms"
-          className="text-xs text-muted-foreground leading-relaxed cursor-pointer"
-        >
-          J&apos;accepte d&apos;être contacté concernant ma demande et je
-          reconnais avoir pris connaissance de la politique de confidentialité.
-        </Label>
-      </div>
+
     </div>
   )
 }

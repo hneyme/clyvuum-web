@@ -12,7 +12,7 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative flex min-h-[80dvh] w-full flex-col items-center justify-center overflow-hidden pt-20"
+      className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-hidden pt-32 pb-24"
     >
       <div className={`container ${containerClass}`}>
         <div className="mx-auto max-w-4xl">
@@ -24,13 +24,13 @@ export function HeroSection({
           </h1>
 
           <p className={subtitleClass}>
-            Clyvuum conçoit des infrastructures num&eacute;riques de haute pr&eacute;cision : sites web optimis&eacute;s, applications
-            et automatisations de workflows pour les entreprises qui visent l&apos;excellence op&eacute;rationnelle.
+            Clyvuum conçoit des infrastructures numériques de haute précision : sites web optimisés, applications
+            et automatisations de workflows pour les entreprises qui visent l&apos;excellence opérationnelle.
           </p>
         </div>
       </div>
 
-      {/* Halo de fond */}
+
       <div className="absolute top-1/2 left-1/2 -z-10 h-[300px] w-[500px] -translate-x-1/2 -translate-y-1/2 bg-primary/20 blur-[100px] opacity-50" />
     </section>
   )

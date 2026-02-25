@@ -11,7 +11,6 @@ export interface CarouselItem {
   description: string
   id: number
   icon: React.ReactNode
-  /** Chemin relatif depuis /public, ex: "/images/automatisation.jpg" */
   image?: string
 }
 
@@ -112,7 +111,6 @@ function CarouselItem({
       }}
       transition={transition}
     >
-      {/* Image full background */}
       {item.image && (
         <div className="absolute inset-0 w-full h-full">
           <Image
@@ -126,7 +124,6 @@ function CarouselItem({
         </div>
       )}
 
-      {/* Texte overlay en bas */}
       <div className="absolute left-0 right-0 bottom-0 px-4 py-3 sm:px-6 sm:py-4">
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 to-transparent" />
         <div className="relative z-10 flex flex-col items-start">
@@ -181,7 +178,6 @@ export function Carousel({
   const [isJumping, setIsJumping] = useState<boolean>(false)
   const [isAnimating, setIsAnimating] = useState<boolean>(false)
 
-  // Pause on hover
   useEffect(() => {
     if (!pauseOnHover || !containerRef.current) return
     const container = containerRef.current
@@ -195,7 +191,6 @@ export function Carousel({
     }
   }, [pauseOnHover])
 
-  // Autoplay
   useEffect(() => {
     if (!autoplay || itemsForRender.length <= 1) return
     if (pauseOnHover && isHovered) return
@@ -207,7 +202,6 @@ export function Carousel({
 
   useEffect(() => {
     const startingPosition = loop ? 1 : 0
-    // avoid calling setState synchronously inside effect — set initial x position only
     x.set(-startingPosition * trackItemOffset)
   }, [itemsForRender.length, loop, trackItemOffset, x])
 
@@ -303,7 +297,6 @@ export function Carousel({
         ))}
       </motion.div>
 
-      {/* Dots */}
       <div className="flex w-full justify-center mt-4">
         <div className="flex gap-2">
           {items.map((_, index) => (

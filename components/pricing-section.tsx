@@ -11,7 +11,6 @@ interface PricingTier {
   price: string
   priceSubtext: string
   features: string[]
-  highlighted?: boolean
   buttonText: string
   plan?: PlanType
 }
@@ -43,7 +42,6 @@ const pricingTiers: PricingTier[] = [
       "Outils personnalisés",
       "Support prioritaire",
     ],
-    highlighted: true,
     buttonText: "Optimiser ma structure",
     plan: "business",
   },
@@ -81,67 +79,53 @@ export function PricingSection() {
   return (
     <section id="pricing" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-background/80">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
             Nos offres
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            Choisissez le plan qui correspond &agrave; votre &eacute;tape de croissance et b&eacute;n&eacute;ficiez d&apos;une transformation digitale adapt&eacute;e &agrave; vos besoins
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
+            Choisissez le plan qui correspond à votre étape de croissance et bénéficiez d&apos;une transformation digitale adaptée à vos besoins
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-10 mb-12 md:items-end">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12 md:items-stretch">
           {pricingTiers.map((tier, index) => (
             <SpotlightCard
               key={index}
-              className={`group relative flex flex-col h-full transition-all duration-300 ${
-                tier.highlighted ? "md:scale-110 border-primary/50" : ""
-              }`}
+              className="group relative flex flex-col h-full transition-all duration-300"
               spotlightColor="rgba(59, 130, 246, 0.15)"
             >
-
               <div className="flex-1">
-                {/* Tier Name */}
-                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-6">
+                <h3 className="text-base md:text-lg font-semibold text-foreground mb-4">
                   {tier.name}
                 </h3>
 
-                {/* Features List */}
-                <div className="space-y-3 mb-8 md:min-h-[260px]">
+                <div className="space-y-2.5 mb-6 md:min-h-[220px]">
                   {tier.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground text-base">{feature}</span>
+                    <div key={idx} className="flex items-start gap-2.5">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground text-sm md:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Price (discreet, at the bottom) */}
-                <div className="pt-4 border-t border-white/10 mb-6">
-                  <p className="text-sm text-muted-foreground mb-0.5">{tier.price}</p>
-                  <p className="text-xs text-muted-foreground/70">{tier.priceSubtext}</p>
+                <div className="pt-3 border-t border-white/10 mb-4">
+                  <p className="text-sm md:text-base text-muted-foreground mb-0.5">{tier.price}</p>
+                  <p className="text-xs md:text-sm text-muted-foreground/70">{tier.priceSubtext}</p>
                 </div>
               </div>
 
-              {/* CTA Button */}
               <Button
                 onClick={() => handlePlanClick(tier)}
-                className={`w-full py-6 ${
-                  tier.highlighted
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                    : "bg-primary/10 text-primary hover:bg-primary/20"
-                }`}
+                className="w-full py-5 bg-primary/10 text-primary hover:bg-primary/20"
               >
-                <span className="text-base font-semibold">{tier.buttonText}</span>
+                <span className="text-sm font-semibold">{tier.buttonText}</span>
               </Button>
             </SpotlightCard>
           ))}
         </div>
       </div>
 
-      {/* Quote Drawer */}
       <QuoteDrawer
         plan={selectedPlan}
         open={drawerOpen}

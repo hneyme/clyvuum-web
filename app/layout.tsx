@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: "Clyvuum | Solutions Digitales & Performance",
   description:
     "Clyvuum accompagne les entreprises dans leur transformation digitale avec des solutions fluides, rapides et sur-mesure. Propulsez votre activité dès aujourd'hui.",
-  generator: "v0.app",
   icons: {
     icon: [
       {
@@ -22,11 +21,10 @@ export const metadata: Metadata = {
         media: "(prefers-color-scheme: dark)",
       },
       {
-        url: "/icon.svg",
+        url: "/clyvuum-logo.svg",
         type: "image/svg+xml",
       },
     ],
-    apple: "/apple-icon.png",
   },
 }
 
@@ -36,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className={`${_geist.className} font-sans antialiased`}>
         {children}
         <Analytics />

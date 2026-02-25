@@ -6,7 +6,7 @@ import LogoLoop from "./LogoLoop"
 import { Icon } from '@iconify/react'
 import { cn } from "@/lib/utils"
 import Image from 'next/image'
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 
 function BentoCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const baseClasses = "group relative h-full w-full overflow-hidden rounded-3xl border border-border bg-card/30 p-4"
@@ -24,7 +24,7 @@ function FeatureOne() {
     <BentoCard className="p-0 sm:row-span-2 flex flex-col justify-center">
       <div className="p-8">
         <h3 className="font-semibold text-xl md:text-2xl mb-1">Adapté à vos besoins</h3>
-        <p className="text-base text-muted-foreground">Une optimisation personnalisée</p>
+        <p className="text-sm md:text-base text-muted-foreground">Une optimisation personnalisée</p>
       </div>
       <div className="px-4 pb-4 mt-2">
           <div className="mx-4 mb-4 border border-border rounded-lg bg-background/50 p-3 overflow-hidden">
@@ -58,7 +58,7 @@ function FeatureTwo() {
         </kbd>
       </div>
       <h3 className="font-semibold text-xl md:text-2xl mb-1">Zéro friction</h3>
-      <p className="text-base text-muted-foreground leading-relaxed">Pilotez votre &eacute;cosyst&egrave;me n&apos;importe o&ugrave; pour une productivit&eacute; d&eacute;cupl&eacute;e</p>
+      <p className="text-sm md:text-base text-muted-foreground leading-relaxed">Pilotez votre écosystème n&apos;importe où pour une productivité décuplée</p>
     </BentoCard>
   )
 }
@@ -68,11 +68,10 @@ function FeatureThree() {
     <BentoCard className="flex flex-col justify-center gap-6 p-8 overflow-hidden">
       <div>
         <h3 className="font-semibold text-xl md:text-2xl mb-1">Connectivité</h3>
-        <p className="text-base text-muted-foreground">Une synchronisation native avec vos outils</p>
+        <p className="text-sm md:text-base text-muted-foreground">Une synchronisation native avec vos outils</p>
       </div>
       
       <div className="w-full">
-        {/* logos loop */}
         <LogoLoop
           logos={[
             { node: <Icon icon="fa7-brands:telegram" width="32" height="32" className="text-foreground/90" />, title: 'Telegram' },
@@ -117,9 +116,9 @@ export function BentoSection() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Travaillez plus intelligement
+            Travaillez plus intelligemment
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed italic">
+          <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed italic">
             Work smarter, not harder.
           </p>
         </div>

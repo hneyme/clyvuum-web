@@ -29,12 +29,12 @@ export function SolutionsSection() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
             Nos solutions
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             Des outils puissants pour accélérer votre transformation digitale
           </p>
         </div>
 
-        <div className="space-y-3 max-w-3xl mx-auto">
+        <div className="space-y-3 max-w-5xl mx-auto">
           {solutions.map((solution, index) => (
             <SpotlightCard
               key={index}
@@ -48,10 +48,10 @@ export function SolutionsSection() {
                   </div>
                 </div>
                 <div className="flex-grow min-w-0">
-                  <h3 className="text-base md:text-base font-semibold text-foreground mb-0.5">
+                  <h3 className="text-base md:text-lg font-semibold text-foreground mb-0.5">
                     {solution.title}
                   </h3>
-                  <p className="text-sm md:text-sm text-muted-foreground leading-snug">
+                  <p className="text-sm md:text-base text-muted-foreground leading-snug">
                     {solution.description}
                   </p>
                 </div>

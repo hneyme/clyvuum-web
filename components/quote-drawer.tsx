@@ -10,6 +10,12 @@ import {
 } from "@/components/ui/sheet"
 import Stepper, { Step } from "@/components/ui/stepper"
 import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -25,15 +31,15 @@ import {
   Globe,
   Briefcase,
   MessageSquare,
-  Send,
   CalendarDays,
   Clock,
   CheckCircle2,
   Sparkles,
+  ChevronDown,
 } from "lucide-react"
+import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 
-/* ─── Types ─── */
 export type PlanType = "starter" | "business"
 
 interface ToolOption {
@@ -45,23 +51,23 @@ interface ToolOption {
 }
 
 interface FormData {
-  // Step 1 – Contact info
   firstName: string
   lastName: string
   email: string
   phone: string
   company: string
   website: string
-  // Step 2 – Tools
   selectedTools: string[]
-  // Step 3 – Details / Calendar
+  currentProcess: string
+  painPoints: string
+  currentTools: string
+  teamSize: string
+  objectives: string
   specificRequests: string
   budget: string
   timeline: string
-  // Business only
   appointmentDate: Date | undefined
   appointmentTime: string
-  // Final
   acceptTerms: boolean
 }
 
@@ -73,6 +79,11 @@ const initialFormData: FormData = {
   company: "",
   website: "",
   selectedTools: [],
+  currentProcess: "",
+  painPoints: "",
+  currentTools: "",
+  teamSize: "",
+  objectives: "",
   specificRequests: "",
   budget: "",
   timeline: "",
@@ -81,7 +92,6 @@ const initialFormData: FormData = {
   acceptTerms: false,
 }
 
-/* ─── Tool options ─── */
 const toolOptions: ToolOption[] = [
   {
     id: "whatsapp",
@@ -135,7 +145,7 @@ const toolOptions: ToolOption[] = [
   {
     id: "zoom",
     label: "Zoom",
-    icon: "fa6-brands:square-font-awesome",
+    icon: "simple-icons:zoom",
     description: "Visioconférence",
     plans: ["business"],
   },
@@ -169,7 +179,6 @@ const toolOptions: ToolOption[] = [
   },
 ]
 
-/* ─── Time slots ─── */
 const timeSlots = [
   "09:00",
   "09:30",
@@ -186,7 +195,6 @@ const timeSlots = [
   "17:00",
 ]
 
-/* ─── Main Component ─── */
 interface QuoteDrawerProps {
   plan: PlanType | null
   open: boolean
@@ -240,9 +248,13 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
     formData.email.trim() !== "" &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
 
-  const isStep2Valid = formData.selectedTools.length > 0
+  const _isStep2Valid =
+    plan === "business"
+      ? formData.currentProcess.trim() !== "" &&
+        formData.painPoints.trim() !== ""
+      : formData.selectedTools.length > 0
 
-  const isStep3Valid =
+  const _isStep3Valid =
     plan === "business"
       ? formData.appointmentDate !== undefined &&
         formData.appointmentTime !== ""
@@ -266,7 +278,6 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
         setIsSubmitted(true)
       }
     } catch {
-      // silently handle – could add toast later
     } finally {
       setIsSubmitting(false)
     }
@@ -277,14 +288,14 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
       title: "Démarrer mon projet",
       subtitle: "Configurez votre solution Starter sur mesure",
       icon: Zap,
-      accent: "from-blue-500/20 to-cyan-500/20",
-      steps: 3,
+      accent: "from-primary/20 to-primary/5",
+      steps: 4,
     },
     business: {
       title: "Optimiser ma structure",
       subtitle: "Configurez votre solution Business complète",
       icon: Building2,
-      accent: "from-violet-500/20 to-purple-500/20",
+      accent: "from-primary/20 to-primary/5",
       steps: 4,
     },
   }
@@ -299,10 +310,9 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
         side="right"
         className={cn(
           "w-full sm:max-w-xl md:max-w-2xl p-0 border-l border-border/50",
-          "flex flex-col overflow-hidden"
+          "flex flex-col h-full max-h-screen overflow-hidden"
         )}
       >
-        {/* Header */}
         <SheetHeader
           className={cn(
             "px-6 pt-6 pb-4 border-b border-border/50",
@@ -325,8 +335,7 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
           </div>
         </SheetHeader>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4">
           {isSubmitted ? (
             <SuccessScreen plan={plan} onClose={() => handleOpenChange(false)} />
           ) : (
@@ -341,22 +350,21 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
               nextButtonText="Suivant"
               className="h-full"
             >
-              {/* Step 1 – Contact Info */}
               <Step>
                 <ContactStep formData={formData} updateField={updateField} />
               </Step>
 
-              {/* Step 2 – Tools */}
               <Step>
                 <ToolsStep
                   plan={plan}
                   availableTools={availableTools}
                   selectedTools={formData.selectedTools}
                   toggleTool={toggleTool}
+                  formData={formData}
+                  updateField={updateField}
                 />
               </Step>
 
-              {/* Step 3 – Details / Requests */}
               <Step>
                 <DetailsStep
                   plan={plan}
@@ -365,15 +373,12 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
                 />
               </Step>
 
-              {/* Step 4 – Appointment (Business only) */}
-              {plan === "business" && (
-                <Step>
-                  <AppointmentStep
-                    formData={formData}
-                    updateField={updateField}
-                  />
-                </Step>
-              )}
+              <Step>
+                <AppointmentStep
+                  formData={formData}
+                  updateField={updateField}
+                />
+              </Step>
             </Stepper>
           )}
         </div>
@@ -382,9 +387,6 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
   )
 }
 
-/* ═══════════════════════ STEP COMPONENTS ═══════════════════════ */
-
-/* ─── Step 1 : Contact ─── */
 function ContactStep({
   formData,
   updateField,
@@ -396,7 +398,7 @@ function ContactStep({
     <div className="space-y-5">
       <div className="flex items-center gap-2 mb-4">
         <User className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="text-base font-semibold text-foreground">
           Vos informations
         </h3>
       </div>
@@ -503,30 +505,111 @@ function ContactStep({
   )
 }
 
-/* ─── Step 2 : Tools ─── */
 function ToolsStep({
   plan,
   availableTools,
   selectedTools,
   toggleTool,
+  formData,
+  updateField,
 }: {
   plan: PlanType
   availableTools: ToolOption[]
   selectedTools: string[]
   toggleTool: (id: string) => void
+  formData?: FormData
+  updateField?: <K extends keyof FormData>(field: K, value: FormData[K]) => void
 }) {
+  if (plan === "business" && formData && updateField) {
+    return (
+      <div className="space-y-5">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-5 w-5 text-primary" />
+          <h3 className="text-base font-semibold text-foreground">
+            Audit de votre activité
+          </h3>
+        </div>
+        <p className="text-sm text-muted-foreground -mt-2 mb-4">
+          Aidez-nous à comprendre votre activité pour préparer un audit personnalisé.
+        </p>
+
+        <div className="space-y-2">
+          <Label htmlFor="currentProcess" className="text-sm">
+            Comment gérez-vous actuellement vos processus métier ? <span className="text-destructive">*</span>
+          </Label>
+          <Textarea
+            id="currentProcess"
+            placeholder="Décrivez vos processus actuels : gestion des clients, suivi des commandes, communication interne..."
+            className="min-h-[80px] resize-none"
+            value={formData.currentProcess}
+            onChange={(e) => updateField("currentProcess", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="painPoints" className="text-sm">
+            Quels sont vos principaux points de friction ? <span className="text-destructive">*</span>
+          </Label>
+          <Textarea
+            id="painPoints"
+            placeholder="Tâches répétitives, perte de temps, erreurs manuelles, manque de visibilité..."
+            className="min-h-[80px] resize-none"
+            value={formData.painPoints}
+            onChange={(e) => updateField("painPoints", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="currentTools" className="text-sm">
+            Quels outils utilisez-vous actuellement ?
+          </Label>
+          <Textarea
+            id="currentTools"
+            placeholder="Excel, Gmail, CRM, logiciel de facturation, réseaux sociaux..."
+            className="min-h-[60px] resize-none"
+            value={formData.currentTools}
+            onChange={(e) => updateField("currentTools", e.target.value)}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="teamSize" className="text-sm">
+              Taille de votre équipe
+            </Label>
+            <Input
+              id="teamSize"
+              placeholder="Ex: 5 personnes"
+              value={formData.teamSize}
+              onChange={(e) => updateField("teamSize", e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="objectives" className="text-sm">
+              Objectif principal
+            </Label>
+            <Input
+              id="objectives"
+              placeholder="Ex: Automatiser le suivi client"
+              value={formData.objectives}
+              onChange={(e) => updateField("objectives", e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-2 mb-2">
         <Sparkles className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="text-base font-semibold text-foreground">
           Vos outils & intégrations
         </h3>
       </div>
       <p className="text-sm text-muted-foreground -mt-2 mb-4">
-        {plan === "starter"
-          ? "Sélectionnez les outils que vous souhaitez intégrer à votre site."
-          : "Choisissez toutes les intégrations nécessaires à votre écosystème digital."}
+        Sélectionnez les outils que vous souhaitez intégrer à votre site.
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -544,7 +627,6 @@ function ToolsStep({
                   : "border-border/50 bg-card hover:border-primary/30 hover:bg-muted/50"
               )}
             >
-              {/* Checkmark */}
               {isSelected && (
                 <div className="absolute top-2 right-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
@@ -586,7 +668,6 @@ function ToolsStep({
   )
 }
 
-/* ─── Step 3 : Details & requests ─── */
 function DetailsStep({
   plan,
   formData,
@@ -674,39 +755,20 @@ function DetailsStep({
         />
       </div>
 
-      {plan === "starter" && (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-          <div className="flex items-start gap-3">
-            <Send className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                Audit de faisabilité inclus
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Nous analyserons votre projet et vous enverrons un devis
-                détaillé sous 48h avec nos recommandations personnalisées.
-              </p>
-            </div>
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+        <div className="flex items-start gap-3">
+          <CalendarDays className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Prochaine étape : Réservez votre créneau
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              À l&apos;étape suivante, choisissez un créneau pour planifier
+              votre consultation avec notre équipe.
+            </p>
           </div>
         </div>
-      )}
-
-      {plan === "business" && (
-        <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4">
-          <div className="flex items-start gap-3">
-            <CalendarDays className="h-5 w-5 text-violet-400 mt-0.5 shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                Prochaine étape : Réservez votre audit
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                À l&apos;étape suivante, choisissez un créneau pour votre audit
-                initial personnalisé avec notre équipe.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       <div className="flex items-start gap-3 pt-2">
         <Checkbox
@@ -728,7 +790,6 @@ function DetailsStep({
   )
 }
 
-/* ─── Step 4 : Appointment (Business only) ─── */
 function AppointmentStep({
   formData,
   updateField,
@@ -736,37 +797,57 @@ function AppointmentStep({
   formData: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
 }) {
+  const [calendarOpen, setCalendarOpen] = useState(false)
+
   const disabledDays = [
-    { dayOfWeek: [0, 6] }, // weekends
-    { before: new Date() }, // past dates
+    { dayOfWeek: [0, 6] },
+    { before: new Date() },
   ]
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="flex items-center gap-2 mb-2">
         <CalendarDays className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold text-foreground">
-          Réservez votre audit
+        <h3 className="text-base font-semibold text-foreground">
+          Réservez votre créneau
         </h3>
       </div>
       <p className="text-sm text-muted-foreground -mt-2 mb-4">
-        Choisissez un créneau pour un audit initial personnalisé de vos
-        processus avec notre équipe.
+        Choisissez une date et un horaire pour votre consultation
+        personnalisée avec notre équipe.
       </p>
 
-      {/* Calendar */}
-      <div className="flex justify-center">
-        <Calendar
-          mode="single"
-          selected={formData.appointmentDate}
-          onSelect={(date) => updateField("appointmentDate", date)}
-          locale={fr}
-          disabled={disabledDays}
-          className="rounded-xl border border-border/50 bg-card"
-        />
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Date</Label>
+        <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full justify-between font-normal text-sm"
+            >
+              {formData.appointmentDate
+                ? format(formData.appointmentDate, "d MMMM yyyy", { locale: fr })
+                : "Sélectionner une date"}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={formData.appointmentDate}
+              onSelect={(date) => {
+                updateField("appointmentDate", date)
+                setCalendarOpen(false)
+              }}
+              locale={fr}
+              disabled={disabledDays}
+              captionLayout="dropdown"
+              defaultMonth={formData.appointmentDate}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
-      {/* Time slots */}
       {formData.appointmentDate && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
@@ -818,7 +899,6 @@ function AppointmentStep({
   )
 }
 
-/* ─── Success Screen ─── */
 function SuccessScreen({
   plan,
   onClose,

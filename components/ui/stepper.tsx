@@ -3,8 +3,6 @@
 import React, {
   useState,
   Children,
-  useRef,
-  useLayoutEffect,
   type HTMLAttributes,
   type ReactNode,
 } from "react"
@@ -72,7 +70,6 @@ export default function Stepper({
 
   return (
     <div className={cn("flex flex-col w-full", className)} {...rest}>
-      {/* Step indicators */}
       <div className="flex w-full items-center px-2 py-4">
         {stepsArray.map((_, index) => {
           const stepNumber = index + 1
@@ -98,7 +95,6 @@ export default function Stepper({
         })}
       </div>
 
-      {/* Step content */}
       <StepContentWrapper
         isCompleted={isCompleted}
         currentStep={currentStep}
@@ -108,7 +104,6 @@ export default function Stepper({
         {stepsArray[currentStep - 1]}
       </StepContentWrapper>
 
-      {/* Navigation footer */}
       {!isCompleted && (
         <div className="px-1 pb-2 pt-4 mt-auto">
           <div
@@ -139,8 +134,6 @@ export default function Stepper({
   )
 }
 
-/* ---------- internal ---------- */
-
 interface StepContentWrapperProps {
   isCompleted: boolean
   currentStep: number
@@ -156,62 +149,27 @@ function StepContentWrapper({
   children,
   className = "",
 }: StepContentWrapperProps) {
-  const [parentHeight, setParentHeight] = useState<number>(0)
-
   return (
-    <motion.div
-      style={{ position: "relative", overflow: "hidden" }}
-      animate={{ height: isCompleted ? 0 : parentHeight }}
-      transition={{ type: "spring", duration: 0.4 }}
+    <div
+      style={{ position: "relative" }}
       className={className}
     >
-      <AnimatePresence initial={false} mode="sync" custom={direction}>
+      <AnimatePresence initial={false} mode="wait" custom={direction}>
         {!isCompleted && (
-          <SlideTransition
+          <motion.div
             key={currentStep}
-            direction={direction}
-            onHeightReady={(h) => setParentHeight(h)}
+            custom={direction}
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3 }}
           >
             {children}
-          </SlideTransition>
+          </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
-  )
-}
-
-interface SlideTransitionProps {
-  children: ReactNode
-  direction: number
-  onHeightReady: (height: number) => void
-}
-
-function SlideTransition({
-  children,
-  direction,
-  onHeightReady,
-}: SlideTransitionProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-
-  useLayoutEffect(() => {
-    if (containerRef.current) {
-      onHeightReady(containerRef.current.offsetHeight)
-    }
-  }, [children, onHeightReady])
-
-  return (
-    <motion.div
-      ref={containerRef}
-      custom={direction}
-      variants={stepVariants}
-      initial="enter"
-      animate="center"
-      exit="exit"
-      transition={{ duration: 0.4 }}
-      style={{ position: "absolute", left: 0, right: 0, top: 0 }}
-    >
-      {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -233,8 +191,6 @@ const stepVariants: Variants = {
 export function Step({ children }: { children: ReactNode }) {
   return <div className="px-1">{children}</div>
 }
-
-/* ---------- StepIndicator ---------- */
 
 interface StepIndicatorProps {
   step: number
@@ -302,8 +258,6 @@ function StepIndicator({
   )
 }
 
-/* ---------- StepConnector ---------- */
-
 function StepConnector({ isComplete }: { isComplete: boolean }) {
   const lineVariants: Variants = {
     incomplete: { width: 0, backgroundColor: "transparent" },
@@ -322,8 +276,6 @@ function StepConnector({ isComplete }: { isComplete: boolean }) {
     </div>
   )
 }
-
-/* ---------- CheckIcon ---------- */
 
 function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

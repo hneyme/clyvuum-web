@@ -14,7 +14,6 @@ export default function Home() {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <main className="flex flex-col w-full">
-        {/* Pas de FadeIn sur le Hero pour un chargement instantané */}
         <HeroSection />
 
         <FadeIn>
@@ -22,11 +21,11 @@ export default function Home() {
         </FadeIn>
 
         <FadeIn>
-          <SolutionsSection />
+          <BentoSection />
         </FadeIn>
 
         <FadeIn>
-          <BentoSection />
+          <SolutionsSection />
         </FadeIn>
 
         <FadeIn>

@@ -58,7 +58,7 @@ ${data.plan === 'starter'
     : 'Notre équipe vous confirmera votre créneau d\'audit et vous contactera très prochainement.'}
 
 À très bientôt !
-L'équipe Agen
+L'équipe Clyvuum
 `
 }
 
@@ -95,53 +95,16 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as QuotePayload
 
-    // Log full payload for records
     console.log('━━━ NEW QUOTE REQUEST ━━━')
     console.log(JSON.stringify(body, null, 2))
 
-    // Build emails
     const clientEmailContent = buildClientEmail(body)
     const ownerEmailContent = buildOwnerEmail(body)
 
-    // Log email content (replace with actual email sending service)
     console.log('\n📧 Email to client:')
     console.log(clientEmailContent)
     console.log('\n📧 Email to owner:')
     console.log(ownerEmailContent)
-
-    // ─── Email sending ───
-    // To activate email sending:
-    // 1. Install nodemailer: npm install nodemailer @types/nodemailer
-    // 2. Set environment variables:
-    //    SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, OWNER_EMAIL
-    // 3. Uncomment the block below:
-    //
-    // const nodemailer = require('nodemailer')
-    // const transporter = nodemailer.createTransport({
-    //   host: process.env.SMTP_HOST,
-    //   port: Number(process.env.SMTP_PORT) || 587,
-    //   secure: false,
-    //   auth: {
-    //     user: process.env.SMTP_USER,
-    //     pass: process.env.SMTP_PASS,
-    //   },
-    // })
-    //
-    // // Send to client
-    // await transporter.sendMail({
-    //   from: `"Agen" <${process.env.SMTP_USER}>`,
-    //   to: body.email,
-    //   subject: `Votre demande ${body.plan === 'starter' ? 'Starter' : 'Business'} – Agen`,
-    //   text: clientEmailContent,
-    // })
-    //
-    // // Send to owner
-    // await transporter.sendMail({
-    //   from: `"Agen Website" <${process.env.SMTP_USER}>`,
-    //   to: process.env.OWNER_EMAIL,
-    //   subject: `🚀 Nouveau devis ${body.plan === 'starter' ? 'Starter' : 'Business'} – ${body.firstName} ${body.lastName}`,
-    //   text: ownerEmailContent,
-    // })
 
     return NextResponse.json({ ok: true })
   } catch (err) {

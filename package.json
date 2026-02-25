@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "clyvuum-website",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -42,6 +42,7 @@
     "@radix-ui/react-tooltip": "1.1.6",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@tabler/icons-react": "^3.37.1",
     "@vercel/analytics": "1.3.1",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
@@ -49,7 +50,6 @@
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
     "embla-carousel-react": "^8.5.1",
-    "framer-motion": "^12.24.12",
     "gsap": "3.14.2",
     "input-otp": "1.4.1",
     "lenis": "^1.3.17",

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check } from "lucide-react"
+import { Check, Zap, Building2, Rocket, type LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import SpotlightCard from "@/components/spotlight-card"
 import { QuoteDrawer, type PlanType } from "@/components/quote-drawer"
@@ -12,6 +12,7 @@ interface PricingTier {
   priceSubtext: string
   features: string[]
   buttonText: string
+  icon: LucideIcon
   plan?: PlanType
 }
 
@@ -20,6 +21,7 @@ const pricingTiers: PricingTier[] = [
     name: "Starter",
     price: "À partir de 500€",
     priceSubtext: "Audit de faisabilité inclus",
+    icon: Zap,
     features: [
       "Site web haute performance",
       "Outils implémentés de votre choix",
@@ -34,6 +36,7 @@ const pricingTiers: PricingTier[] = [
     name: "Business",
     price: "À partir de 2000€",
     priceSubtext: "Analyse complète de vos processus incluse",
+    icon: Building2,
     features: [
       "Tout du plan Starter",
       "Interface de gestion",
@@ -49,6 +52,7 @@ const pricingTiers: PricingTier[] = [
     name: "Scale",
     price: "Sur demande",
     priceSubtext: "Solution personnalisée",
+    icon: Rocket,
     features: [
       "Tout du plan Business",
       "Infrastructure personnalisée",
@@ -95,16 +99,21 @@ export function PricingSection() {
               className="group relative flex flex-col h-full transition-all duration-300"
               spotlightColor="rgba(59, 130, 246, 0.15)"
             >
-              <div className="flex-1">
-                <h3 className="text-base md:text-lg font-semibold text-foreground mb-4">
-                  {tier.name}
-                </h3>
+              <div className="flex-1 flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground">
+                    {tier.name}
+                  </h3>
+                  <div className="flex items-center justify-center h-8 w-8 rounded-md bg-primary/15">
+                    <tier.icon className="h-4 w-4 text-primary" />
+                  </div>
+                </div>
 
-                <div className="space-y-2.5 mb-6 md:min-h-[220px]">
+                <div className="space-y-2.5 mb-6 flex-1">
                   {tier.features.map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-2.5">
                       <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground text-sm md:text-base">{feature}</span>
+                      <span className="text-muted-foreground text-base">{feature}</span>
                     </div>
                   ))}
                 </div>

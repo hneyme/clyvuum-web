@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three"
 import ThreeGlobe from "three-globe"
 import { useThree, Canvas, extend } from "@react-three/fiber"
@@ -69,8 +69,6 @@ interface WorldProps {
   specialPoints?: SpecialPoint[]
 }
 
-// numbersOfRings is unused — removed to satisfy lint
-
 export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
   const globeRef = useRef<ThreeGlobe | null>(null)
   const groupRef = useRef<any>(null)
@@ -93,17 +91,14 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
     ...globeConfig,
   }
 
-  // Initialize globe only once
   useEffect(() => {
     if (!globeRef.current && groupRef.current) {
       globeRef.current = new ThreeGlobe()
       ;(groupRef.current as any).add(globeRef.current)
-      // avoid calling setState synchronously within the effect to prevent cascading renders
       requestAnimationFrame(() => setIsInitialized(true))
     }
   }, [])
 
-  // Build material when globe is initialized or when relevant props change
   useEffect(() => {
     if (!globeRef.current || !isInitialized) return
 
@@ -125,7 +120,6 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
     globeConfig.shininess,
   ])
 
-  // Build data when globe is initialized or when data changes
   useEffect(() => {
     if (!globeRef.current || !isInitialized || !data) return
 
@@ -149,7 +143,6 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
       })
     }
 
-    // remove duplicates for same lat and lng
     let filteredPoints = points.filter(
       (v, i, a) =>
         a.findIndex((v2) =>
@@ -159,13 +152,10 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
         ) === i,
     )
 
-    // Merge special points, overriding default ones with same coordinates
     if (specialPoints && specialPoints.length > 0) {
-      // Remove any existing point with same coordinates as special points
       filteredPoints = filteredPoints.filter(
         p => !specialPoints.some(sp => sp.lat === p.lat && sp.lng === p.lng)
       )
-      // Add special points
       filteredPoints = [...filteredPoints, ...specialPoints.map(sp => ({
         size: sp.size || defaultProps.pointSize,
         order: 0,
@@ -228,7 +218,6 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
     defaultProps.maxRings,
   ])
 
-  // Handle rings animation with cleanup
   useEffect(() => {
     if (!globeRef.current || !isInitialized || !data) return
 
@@ -271,7 +260,8 @@ export function WebGLRendererConfig() {
   const { gl, size } = useThree()
 
   useEffect(() => {
-    gl.setPixelRatio(window.devicePixelRatio)
+    const isMobile = window.innerWidth < 768
+    gl.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2))
     gl.setSize(size.width, size.height)
     gl.setClearColor(0xffaaff, 0)
   }, [gl, size])
@@ -281,10 +271,36 @@ export function WebGLRendererConfig() {
 
 export function World(props: WorldProps) {
   const { globeConfig } = props
-  const scene = new Scene()
-  scene.fog = new Fog(0xffffff, 400, 2000)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const scene = useMemo(() => {
+    const s = new Scene()
+    s.fog = new Fog(0xffffff, 400, 2000)
+    return s
+  }, [])
+
+  const camera = useMemo(
+    () => new PerspectiveCamera(50, aspect, 180, 1800),
+    []
+  )
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "200px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)}>
+    <div ref={containerRef} className="w-full h-full">
+      {isVisible && (
+        <Canvas scene={scene} camera={camera}>
       <WebGLRendererConfig />
       <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
       <directionalLight
@@ -312,28 +328,15 @@ export function World(props: WorldProps) {
         maxPolarAngle={Math.PI - Math.PI / 3}
       />
     </Canvas>
+      )}
+    </div>
   )
 }
 
-export function hexToRgb(hex: string) {
-  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
-  hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-    return r + r + g + g + b + b
-  })
-
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null
-}
-
-export function genRandomNumbers(min: number, max: number, count: number) {
-  const arr = []
-  while (arr.length < count) {
+function genRandomNumbers(min: number, max: number, count: number) {
+  const safeCount = Math.min(count, max - min)
+  const arr: number[] = []
+  while (arr.length < safeCount) {
     const r = Math.floor(Math.random() * (max - min)) + min
     if (arr.indexOf(r) === -1) arr.push(r)
   }

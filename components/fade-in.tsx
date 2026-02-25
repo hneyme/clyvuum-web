@@ -5,13 +5,13 @@ import React from "react"
 export function FadeIn({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{ 
-        duration: 1.4,
+        duration: 0.6,
         delay: delay,
-        ease: [0.16, 1, 0.3, 1]
+        ease: [0.25, 0.46, 0.45, 0.94]
       }}
     >
       {children}

@@ -12,25 +12,32 @@ import { Icon } from "@iconify/react"
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus('idle')
 
     const form = e.currentTarget
     const formData = new FormData(form)
 
     try {
-      await fetch("https://formspree.io/f/xpqqalzy", {
+      const res = await fetch("https://formspree.io/f/xpqqalzy", {
         method: "POST",
         body: formData,
         headers: {
           Accept: "application/json",
         },
       })
-      form.reset()
-    } catch (error) {
-      console.error("Error:", error)
+      if (res.ok) {
+        form.reset()
+        setSubmitStatus('success')
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch {
+      setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
     }
@@ -97,11 +104,20 @@ export function ContactSection() {
               >
                 {isSubmitting ? "Envoi en cours..." : "Envoyer"}
               </Button>
+              {submitStatus === 'success' && (
+                <p className="text-sm text-green-500 text-center">Message envoyé avec succès !</p>
+              )}
+              {submitStatus === 'error' && (
+                <p className="text-sm text-red-500 text-center">Une erreur est survenue. Veuillez réessayer.</p>
+              )}
             </form>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-card/30 border border-border/50 transition-all duration-300 hover:border-primary/30">
+            <a
+              href="tel:+33744995224"
+              className="flex items-center gap-4 p-4 rounded-xl bg-card/30 border border-border/50 transition-all duration-300 hover:border-primary/30"
+            >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <Phone className="w-5 h-5 text-primary" />
               </div>
@@ -109,9 +125,12 @@ export function ContactSection() {
                 <p className="text-sm text-muted-foreground">Téléphone</p>
                 <p className="text-foreground font-medium">+33 7 44 99 52 24</p>
               </div>
-            </div>
+            </a>
 
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-card/30 border border-border/50 transition-all duration-300 hover:border-primary/30">
+            <a
+              href="mailto:contact@clyvuum.fr"
+              className="flex items-center gap-4 p-4 rounded-xl bg-card/30 border border-border/50 transition-all duration-300 hover:border-primary/30"
+            >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <Mail className="w-5 h-5 text-primary" />
               </div>
@@ -119,7 +138,7 @@ export function ContactSection() {
                 <p className="text-sm text-muted-foreground">Email</p>
                 <p className="text-foreground font-medium">contact@clyvuum.fr</p>
               </div>
-            </div>
+            </a>
 
             <a
               href="https://wa.me/33744995224"

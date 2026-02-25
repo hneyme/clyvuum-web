@@ -245,18 +245,6 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
     formData.email.trim() !== "" &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
 
-  const _isStep2Valid =
-    plan === "business"
-      ? formData.currentProcess.trim() !== "" &&
-        formData.painPoints.trim() !== ""
-      : formData.selectedTools.length > 0
-
-  const _isStep3Valid =
-    plan === "business"
-      ? formData.appointmentDate !== undefined &&
-        formData.appointmentTime !== ""
-      : true
-
   const handleSubmit = async () => {
     setIsSubmitting(true)
     try {
@@ -808,7 +796,7 @@ function AppointmentStep({
               className="w-full justify-between font-normal text-sm"
             >
               {formData.appointmentDate
-                ? format(formData.appointmentDate, "d MMMM yyyy", { locale: fr })
+                ? format(formData.appointmentDate, "d MMMM", { locale: fr })
                 : "Sélectionner une date"}
               <ChevronDown className="h-4 w-4 opacity-50" />
             </Button>
@@ -823,7 +811,7 @@ function AppointmentStep({
               }}
               locale={fr}
               disabled={disabledDays}
-              captionLayout="dropdown"
+              captionLayout="label"
               defaultMonth={formData.appointmentDate}
             />
           </PopoverContent>

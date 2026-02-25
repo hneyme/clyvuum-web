@@ -7,7 +7,7 @@ const solutions = [
   {
     icon: Zap,
     title: "Starter",
-    description: "L'essentiel pour convertir. Une présence digitale haute performance conçue pour capturer vos premiers leads et simplifier votre prise de rendez-vous immédiatement.",
+    description: "L'essentiel pour convertir. Une présence digitale haute performance conçue pour étendre votre portée et simplifier votre communication en ligne.",
   },
   {
     icon: Building2,
@@ -43,12 +43,12 @@ export function SolutionsSection() {
             >
               <div className="w-full px-3 py-2 md:px-4 md:py-2 flex items-start gap-3 md:gap-4">
                 <div className="flex-shrink-0 mt-0.5">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-md bg-primary/15">
-                    <solution.icon className="h-4 w-4 text-primary" />
+                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary/15">
+                    <solution.icon className="h-5 w-5 text-primary" />
                   </div>
                 </div>
                 <div className="flex-grow min-w-0">
-                  <h3 className="text-base md:text-lg font-semibold text-foreground mb-0.5">
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-0.5">
                     {solution.title}
                   </h3>
                   <p className="text-sm md:text-base text-muted-foreground leading-snug">

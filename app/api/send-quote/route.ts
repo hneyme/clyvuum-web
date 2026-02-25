@@ -14,7 +14,6 @@ interface QuotePayload {
   timeline?: string
   appointmentDate?: string
   appointmentTime?: string
-  acceptTerms: boolean
   submittedAt: string
 }
 
@@ -95,16 +94,9 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as QuotePayload
 
-    console.log('━━━ NEW QUOTE REQUEST ━━━')
-    console.log(JSON.stringify(body, null, 2))
-
-    const clientEmailContent = buildClientEmail(body)
-    const ownerEmailContent = buildOwnerEmail(body)
-
-    console.log('\n📧 Email to client:')
-    console.log(clientEmailContent)
-    console.log('\n📧 Email to owner:')
-    console.log(ownerEmailContent)
+    // TODO: integrate email provider (e.g. Resend, Formspree) to send these
+    void buildClientEmail(body)
+    void buildOwnerEmail(body)
 
     return NextResponse.json({ ok: true })
   } catch (err) {

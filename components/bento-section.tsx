@@ -35,8 +35,7 @@ function FeatureOne() {
                 className="w-full h-full object-contain pointer-events-none select-none"
                 width={384}
                 height={374}
-                quality={100}
-                unoptimized
+                quality={85}
                 loading="lazy"
               />
             </div>
@@ -86,8 +85,6 @@ function FeatureThree() {
             { node: <Icon icon="fa7-brands:stripe" width="32" height="32" className="text-foreground/90" />, title: 'Stripe' },
             { node: <Icon icon="fa7-brands:paypal" width="32" height="32" className="text-foreground/90" />, title: 'PayPal' },
             { node: <Icon icon="fa7-brands:discord" width="32" height="32" className="text-foreground/90" />, title: 'Discord' },
-            
-            
           ]}
           speed={40}
           direction="left"
@@ -105,11 +102,12 @@ function FeatureThree() {
   )
 }
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+} as const
+
 export function BentoSection() {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  }
 
   return (
     <section id="bento" className="pt-16 pb-20 md:pt-32 md:pb-32 px-4 sm:px-6 lg:px-8 bg-background">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useCallback } from "react"
 import { motion, PanInfo, useMotionValue, useTransform } from "motion/react"
 import { Code, Layout, Layers } from "lucide-react"
 import Image from "next/image"
@@ -81,6 +81,7 @@ interface CarouselItemProps {
   trackItemOffset: number
   x: any
   transition: any
+  disableRotateY?: boolean
 }
 
 function CarouselItem({
@@ -92,6 +93,7 @@ function CarouselItem({
   trackItemOffset,
   x,
   transition,
+  disableRotateY = false,
 }: CarouselItemProps) {
   const range = [-(index + 1) * trackItemOffset, -index * trackItemOffset, -(index - 1) * trackItemOffset]
   const outputRange = [90, 0, -90]
@@ -106,7 +108,7 @@ function CarouselItem({
       style={{
         width: itemWidth,
         height: itemHeight,
-        rotateY,
+        ...(disableRotateY ? {} : { rotateY }),
         ...(round && { borderRadius: "50%" }),
       }}
       transition={transition}
@@ -117,6 +119,7 @@ function CarouselItem({
             src={item.image}
             alt={item.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ objectFit: "contain", objectPosition: "center" }}
             className="pointer-events-none select-none"
             draggable={false}
@@ -151,15 +154,33 @@ export function Carousel({
 }: CarouselProps): JSX.Element {
   const [containerWidth, setContainerWidth] = useState<number>(baseWidth)
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const updateWidth = () => {
-      if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth)
-    }
-    updateWidth()
-    window.addEventListener("resize", updateWidth)
-    return () => window.removeEventListener("resize", updateWidth)
+    const mq = window.matchMedia('(max-width: 768px)')
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
   }, [])
+
+  const updateWidth = useCallback(() => {
+    if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth)
+  }, [])
+
+  useEffect(() => {
+    updateWidth()
+    let timeout: ReturnType<typeof setTimeout>
+    const handleResize = () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(updateWidth, 150)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      clearTimeout(timeout)
+    }
+  }, [updateWidth])
 
   const containerPadding = 16
   const itemWidth = containerWidth - containerPadding * 2
@@ -272,8 +293,7 @@ export function Carousel({
         style={{
           width: itemWidth,
           gap: `${GAP}px`,
-          perspective: 1000,
-          perspectiveOrigin: `${position * trackItemOffset + itemWidth / 2}px 50%`,
+          ...(isMobile ? {} : { perspective: 1000, perspectiveOrigin: `${position * trackItemOffset + itemWidth / 2}px 50%` }),
           x,
         }}
         onDragEnd={handleDragEnd}
@@ -293,6 +313,7 @@ export function Carousel({
             trackItemOffset={trackItemOffset}
             x={x}
             transition={effectiveTransition}
+            disableRotateY={isMobile}
           />
         ))}
       </motion.div>

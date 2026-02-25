@@ -119,6 +119,7 @@ const useImageLoader = (
 
 const useAnimationLoop = (
   trackRef: React.RefObject<HTMLDivElement | null>,
+  containerRef: React.RefObject<HTMLDivElement | null>,
   targetVelocity: number,
   seqWidth: number,
   seqHeight: number,
@@ -130,6 +131,25 @@ const useAnimationLoop = (
   const lastTimestampRef = useRef<number | null>(null);
   const offsetRef = useRef(0);
   const velocityRef = useRef(0);
+  const isVisibleRef = useRef(true);
+
+  // Pause animation when off-screen
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (!entry.isIntersecting) {
+          lastTimestampRef.current = null; // Reset timestamp to avoid jump
+        }
+      },
+      { rootMargin: '50px' }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [containerRef]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -158,6 +178,13 @@ const useAnimationLoop = (
     }
 
     const animate = (timestamp: number) => {
+      // Skip animation when off-screen to save CPU/GPU
+      if (!isVisibleRef.current) {
+        lastTimestampRef.current = null;
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       if (lastTimestampRef.current === null) {
         lastTimestampRef.current = timestamp;
       }
@@ -273,7 +300,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
 
     useImageLoader(seqRef, updateDimensions, [logos, gap, logoHeight, isVertical]);
 
-    useAnimationLoop(trackRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical);
+    useAnimationLoop(trackRef, containerRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical);
 
     const cssVariables = useMemo(
       () =>

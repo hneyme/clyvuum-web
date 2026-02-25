@@ -13,6 +13,9 @@ interface SpotlightCardProps extends React.PropsWithChildren {
   spotlightColor?: string
 }
 
+const isTouchDevice = () =>
+  typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+
 const SpotlightCard: React.FC<SpotlightCardProps> = ({
   children,
   className = "",
@@ -24,7 +27,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   const [opacity, setOpacity] = useState<number>(0)
 
   const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    if (!divRef.current || isFocused) return
+    if (!divRef.current || isFocused || isTouchDevice()) return
 
     const rect = divRef.current.getBoundingClientRect()
     setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
@@ -41,7 +44,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   }
 
   const handleMouseEnter = () => {
-    setOpacity(0.6)
+    if (!isTouchDevice()) setOpacity(0.6)
   }
 
   const handleMouseLeave = () => {

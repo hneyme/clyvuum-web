@@ -18,7 +18,7 @@ export function HeroSection({
         <div className="mx-auto max-w-4xl">
           <h1 className={headingClass}>
             Faire plus <br />
-            <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient motion-reduce:animate-none">
               avec moins
             </span>
           </h1>
@@ -30,8 +30,7 @@ export function HeroSection({
         </div>
       </div>
 
-
-      <div className="absolute top-1/2 left-1/2 -z-10 h-[300px] w-[500px] -translate-x-1/2 -translate-y-1/2 bg-primary/20 blur-[100px] opacity-50" />
+      <div className="absolute top-1/2 left-1/2 -z-10 h-[200px] w-[300px] md:h-[300px] md:w-[500px] -translate-x-1/2 -translate-y-1/2 bg-primary/20 blur-[60px] md:blur-[100px] opacity-50" />
     </section>
   )
 }

@@ -35,19 +35,15 @@ export function Navbar() {
   }, [])
 
   return (
-    <motion.div
+    <motion.nav
       ref={ref}
-      className="fixed inset-x-0 top-0 z-50 w-full"
+      className="fixed inset-x-0 top-0 z-50 w-full will-change-transform"
+      aria-label="Navigation principale"
     >
-
       <motion.div
         animate={{
-          backdropFilter: visible ? "blur(16px) saturate(180%)" : "none",
-          boxShadow: visible
-            ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
-            : "none",
           width: visible ? "40%" : "100%",
-          y: visible ? 20 : 0,
+          y: visible ? 20 : 8,
         }}
         transition={{
           type: "spring",
@@ -58,8 +54,9 @@ export function Navbar() {
           minWidth: "800px",
         }}
         className={cn(
-          "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-6 py-3 lg:flex",
-          visible && "bg-neutral-950/30 border border-white/[0.06]"
+          "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex",
+          "transition-[backdrop-filter,box-shadow,background-color,border-color] duration-300",
+          visible && "bg-neutral-950/80 border border-white/[0.06] backdrop-blur-md shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset]"
         )}
       >
         <button
@@ -75,17 +72,16 @@ export function Navbar() {
           />
         </button>
 
-
         <motion.div
           onMouseLeave={() => setHovered(null)}
-          className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-600 transition duration-200 hover:text-zinc-800 lg:flex lg:space-x-2"
+          className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium lg:flex lg:space-x-2"
         >
           {navItems.map((item, idx) => (
             <button
               key={item.sectionId}
               onMouseEnter={() => setHovered(idx)}
               onClick={() => scrollToSection(item.sectionId)}
-              className="relative px-4 py-2 text-white"
+              className="relative px-4 py-2 text-neutral-300"
             >
               {hovered === idx && (
                 <motion.div
@@ -106,15 +102,10 @@ export function Navbar() {
         </button>
       </motion.div>
 
-
       <motion.div
         animate={{
-          backdropFilter: visible ? "blur(16px) saturate(180%)" : "none",
-          boxShadow: visible
-            ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
-            : "none",
-          width: visible ? "90%" : "100%",
-          y: visible ? 20 : 0,
+          width: visible ? "92%" : "100%",
+          y: visible ? 12 : 6,
         }}
         transition={{
           type: "spring",
@@ -123,10 +114,10 @@ export function Navbar() {
         }}
         className={cn(
           "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between rounded-full bg-transparent px-4 py-3 lg:hidden",
-          visible && "bg-neutral-950/30 border border-white/[0.06]"
+          "transition-[backdrop-filter,box-shadow,background-color,border-color] duration-300",
+          visible && "bg-neutral-950/80 border border-white/[0.06] backdrop-blur-md shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset]"
         )}
       >
-
         <div className="flex w-full items-center justify-between">
           <button
             onClick={() => scrollToSection("hero")}
@@ -142,18 +133,25 @@ export function Navbar() {
           </button>
 
           {mobileOpen ? (
-            <IconX
-              className="h-6 w-6 text-white cursor-pointer"
+            <button
+              aria-label="Fermer le menu"
+              aria-expanded={true}
               onClick={() => setMobileOpen(false)}
-            />
+              className="p-1"
+            >
+              <IconX className="h-6 w-6 text-white" />
+            </button>
           ) : (
-            <IconMenu2
-              className="h-6 w-6 text-white cursor-pointer"
+            <button
+              aria-label="Ouvrir le menu"
+              aria-expanded={false}
               onClick={() => setMobileOpen(true)}
-            />
+              className="p-1"
+            >
+              <IconMenu2 className="h-6 w-6 text-white" />
+            </button>
           )}
         </div>
-
 
         <AnimatePresence>
           {mobileOpen && (
@@ -161,7 +159,7 @@ export function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-x-0 top-14 z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950/98 backdrop-blur-2xl border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              className="absolute inset-x-0 top-[4.5rem] z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950 border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             >
               {navItems.map((item) => (
                 <button
@@ -185,6 +183,6 @@ export function Navbar() {
           )}
         </AnimatePresence>
       </motion.div>
-    </motion.div>
+    </motion.nav>
   )
 }

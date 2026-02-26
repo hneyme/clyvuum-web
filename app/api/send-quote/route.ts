@@ -31,6 +31,7 @@ const quoteSchema = z.object({
   company: z.string().max(200).optional().default(''),
   website: z.string().max(500).optional().default(''),
   selectedTools: z.array(z.enum(VALID_TOOLS)).max(12).default([]),
+  customTool: z.string().max(200).optional().default(''),
   currentProcess: z.string().max(2000).optional().default(''),
   painPoints: z.string().max(2000).optional().default(''),
   currentTools: z.string().max(1000).optional().default(''),
@@ -78,13 +79,13 @@ Merci pour votre demande ! Nous avons bien reçu votre formulaire pour le plan $
 📋 Récapitulatif de votre demande :
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • Plan : ${planName}
-• Outils sélectionnés : ${tools || 'Aucun'}
+• Outils sélectionnés : ${tools || 'Aucun'}${data.customTool ? `\n• Autre outil demandé : ${data.customTool}` : ''}
 • Budget estimé : ${data.budget || 'Non précisé'}
 • Délai souhaité : ${data.timeline || 'Non précisé'}
 ${data.specificRequests ? `• Demandes spécifiques : ${data.specificRequests}` : ''}${appointment}
 
 ${data.plan === 'starter'
-    ? 'Notre équipe analyse votre projet et vous enverra un devis détaillé sous 48h.'
+    ? 'Notre équipe analyse votre projet !'
     : "Notre équipe vous confirmera votre créneau d'audit et vous contactera très prochainement."}
 
 À très bientôt !
@@ -107,7 +108,7 @@ function buildOwnerEmail(data: QuotePayload): string {
 • Entreprise : ${data.company || 'Non renseignée'}
 • Site web : ${data.website || 'Non renseigné'}
 
-🛠 Outils sélectionnés : ${tools || 'Aucun'}
+🛠 Outils sélectionnés : ${tools || 'Aucun'}${data.customTool ? `\n🔧 Autre outil demandé : ${data.customTool}` : ''}
 
 📋 Détails :
 • Budget : ${data.budget || 'Non précisé'}

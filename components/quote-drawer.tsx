@@ -57,6 +57,7 @@ interface FormData {
   company: string
   website: string
   selectedTools: string[]
+  customTool: string
   currentProcess: string
   painPoints: string
   currentTools: string
@@ -77,6 +78,7 @@ const initialFormData: FormData = {
   company: "",
   website: "",
   selectedTools: [],
+  customTool: "",
   currentProcess: "",
   painPoints: "",
   currentTools: "",
@@ -102,7 +104,7 @@ const toolOptions: ToolOption[] = [
     label: "Slack",
     icon: "fa6-brands:slack",
     description: "Communication d'équipe",
-    plans: ["business"],
+    plans: ["starter", "business"],
   },
   {
     id: "google-drive",
@@ -137,7 +139,7 @@ const toolOptions: ToolOption[] = [
     label: "Discord",
     icon: "fa6-brands:discord",
     description: "Communauté & support",
-    plans: ["starter", "business"],
+    plans: ["business"],
   },
   {
     id: "zoom",
@@ -690,6 +692,21 @@ function ToolsStep({
             {selectedTools.length} outil{selectedTools.length > 1 ? "s" : ""}{" "}
             sélectionné{selectedTools.length > 1 ? "s" : ""}
           </span>
+        </div>
+      )}
+
+      {formData && updateField && (
+        <div className="space-y-2 pt-3 border-t border-border/50">
+          <Label htmlFor="customTool" className="text-sm text-muted-foreground">
+            Vous utilisez un autre outil ? Précisez-le ici
+          </Label>
+          <Input
+            id="customTool"
+            placeholder="Ex: Notion, Trello, HubSpot, Airtable..."
+            maxLength={200}
+            value={formData.customTool}
+            onChange={(e) => updateField("customTool", e.target.value)}
+          />
         </div>
       )}
     </div>

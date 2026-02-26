@@ -133,7 +133,6 @@ const useAnimationLoop = (
   const velocityRef = useRef(0);
   const isVisibleRef = useRef(true);
 
-  // Pause animation when off-screen
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -142,7 +141,7 @@ const useAnimationLoop = (
       ([entry]) => {
         isVisibleRef.current = entry.isIntersecting;
         if (!entry.isIntersecting) {
-          lastTimestampRef.current = null; // Reset timestamp to avoid jump
+          lastTimestampRef.current = null;
         }
       },
       { rootMargin: '50px' }
@@ -178,7 +177,6 @@ const useAnimationLoop = (
     }
 
     const animate = (timestamp: number) => {
-      // Skip animation when off-screen to save CPU/GPU
       if (!isVisibleRef.current) {
         lastTimestampRef.current = null;
         rafRef.current = requestAnimationFrame(animate);

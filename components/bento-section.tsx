@@ -73,18 +73,18 @@ function FeatureThree() {
       <div className="w-full">
         <LogoLoop
           logos={[
-            { node: <Icon icon="fa7-brands:telegram" width="32" height="32" className="text-foreground/90" />, title: 'Telegram' },
-            { node: <Icon icon="fa7-brands:whatsapp" width="32" height="32" className="text-foreground/90" />, title: 'WhatsApp' },
-            { node: <Icon icon="fa7-brands:slack" width="32" height="32" className="text-foreground/90" />, title: 'Slack' },
-            { node: <Icon icon="fa7-brands:apple" width="32" height="32" className="text-foreground/90" />, title: 'Apple' },
-            { node: <Icon icon="fa7-brands:windows" width="32" height="32" className="text-foreground/90" />, title: 'Windows' },
-            { node: <Icon icon="fa7-brands:android" width="32" height="32" className="text-foreground/90" />, title: 'Android' },
-            { node: <Icon icon="fa7-brands:zoom" width="32" height="32" className="text-foreground/90" />, title: 'Zoom' },
-            { node: <Icon icon="fa7-brands:mailchimp" width="32" height="32" className="text-foreground/90" />, title: 'Mailchimp' },
-            { node: <Icon icon="fa7-brands:google-drive" width="32" height="32" className="text-foreground/90" />, title: 'Google Drive' },
-            { node: <Icon icon="fa7-brands:stripe" width="32" height="32" className="text-foreground/90" />, title: 'Stripe' },
-            { node: <Icon icon="fa7-brands:paypal" width="32" height="32" className="text-foreground/90" />, title: 'PayPal' },
-            { node: <Icon icon="fa7-brands:discord" width="32" height="32" className="text-foreground/90" />, title: 'Discord' },
+            { node: <Icon icon="fa6-brands:telegram" width="32" height="32" className="text-foreground/90" />, title: 'Telegram' },
+            { node: <Icon icon="fa6-brands:whatsapp" width="32" height="32" className="text-foreground/90" />, title: 'WhatsApp' },
+            { node: <Icon icon="fa6-brands:slack" width="32" height="32" className="text-foreground/90" />, title: 'Slack' },
+            { node: <Icon icon="fa6-brands:apple" width="32" height="32" className="text-foreground/90" />, title: 'Apple' },
+            { node: <Icon icon="fa6-brands:windows" width="32" height="32" className="text-foreground/90" />, title: 'Windows' },
+            { node: <Icon icon="fa6-brands:android" width="32" height="32" className="text-foreground/90" />, title: 'Android' },
+            { node: <Icon icon="fa6-brands:zoom" width="32" height="32" className="text-foreground/90" />, title: 'Zoom' },
+            { node: <Icon icon="fa6-brands:mailchimp" width="32" height="32" className="text-foreground/90" />, title: 'Mailchimp' },
+            { node: <Icon icon="fa6-brands:google-drive" width="32" height="32" className="text-foreground/90" />, title: 'Google Drive' },
+            { node: <Icon icon="fa6-brands:stripe" width="32" height="32" className="text-foreground/90" />, title: 'Stripe' },
+            { node: <Icon icon="fa6-brands:paypal" width="32" height="32" className="text-foreground/90" />, title: 'PayPal' },
+            { node: <Icon icon="fa6-brands:discord" width="32" height="32" className="text-foreground/90" />, title: 'Discord' },
           ]}
           speed={40}
           direction="left"

@@ -23,12 +23,14 @@ export function ContactSection() {
     const formData = new FormData(form)
 
     try {
-      const res = await fetch("https://formspree.io/f/xpqqalzy", {
+      const res = await fetch("/api/send-contact", {
         method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          message: formData.get("message"),
+        }),
       })
       if (res.ok) {
         form.reset()
@@ -68,6 +70,7 @@ export function ContactSection() {
                   name="name"
                   placeholder="Votre nom"
                   required
+                  maxLength={100}
                   className="bg-background/50 border-border focus:border-primary"
                 />
               </div>
@@ -81,6 +84,7 @@ export function ContactSection() {
                   type="email"
                   placeholder="votre@email.com"
                   required
+                  maxLength={320}
                   className="bg-background/50 border-border focus:border-primary"
                 />
               </div>
@@ -94,6 +98,7 @@ export function ContactSection() {
                   placeholder="Votre message..."
                   rows={4}
                   required
+                  maxLength={5000}
                   className="bg-background/50 border-border focus:border-primary resize-none"
                 />
               </div>
@@ -105,10 +110,10 @@ export function ContactSection() {
                 {isSubmitting ? "Envoi en cours..." : "Envoyer"}
               </Button>
               {submitStatus === 'success' && (
-                <p className="text-sm text-green-500 text-center">Message envoyé avec succès !</p>
+                <p role="alert" className="text-sm text-green-500 text-center">Message envoyé avec succès !</p>
               )}
               {submitStatus === 'error' && (
-                <p className="text-sm text-red-500 text-center">Une erreur est survenue. Veuillez réessayer.</p>
+                <p role="alert" className="text-sm text-red-500 text-center">Une erreur est survenue. Veuillez réessayer.</p>
               )}
             </form>
           </div>

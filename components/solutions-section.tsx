@@ -1,7 +1,7 @@
 "use client"
 
 import { Zap, Building2, Rocket } from "lucide-react"
-import SpotlightCard from "@/components/ui/spotlight-card"
+import SpotlightCard from "@/components/spotlight-card"
 
 const solutions = [
   {
@@ -38,7 +38,7 @@ export function SolutionsSection() {
           {solutions.map((solution, index) => (
             <SpotlightCard
               key={index}
-              className="w-full hover:shadow-lg hover:scale-[1.01] transition-transform duration-200"
+              className="!p-3 md:!p-4 !rounded-3xl !border-neutral-800 !bg-neutral-900 w-full hover:shadow-lg hover:scale-[1.01] transition-transform duration-200"
               spotlightColor="rgba(255,255,255,0.06)"
             >
               <div className="w-full px-3 py-2 md:px-4 md:py-2 flex items-start gap-3 md:gap-4">

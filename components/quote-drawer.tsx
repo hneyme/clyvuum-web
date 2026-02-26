@@ -202,11 +202,14 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
 
   const resetForm = useCallback(() => {
     setFormData(initialFormData)
     setIsSubmitting(false)
     setIsSubmitted(false)
+    setSubmitError(false)
   }, [])
 
   const handleOpenChange = useCallback(
@@ -245,8 +248,27 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
     formData.email.trim() !== "" &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
 
+  const isStepValid = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return isStep1Valid
+      case 2:
+        return true // outils optionnels
+      case 3:
+        if (plan === 'business') {
+          return formData.currentProcess.trim() !== '' && formData.painPoints.trim() !== ''
+        }
+        return true
+      case 4:
+        return true // rendez-vous optionnel
+      default:
+        return true
+    }
+  }
+
   const handleSubmit = async () => {
     setIsSubmitting(true)
+    setSubmitError(false)
     try {
       const payload = {
         plan,
@@ -261,8 +283,11 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
       })
       if (res.ok) {
         setIsSubmitted(true)
+      } else {
+        setSubmitError(true)
       }
     } catch {
+      setSubmitError(true)
     } finally {
       setIsSubmitting(false)
     }
@@ -324,12 +349,18 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
           {isSubmitted ? (
             <SuccessScreen plan={plan} onClose={() => handleOpenChange(false)} />
           ) : (
-            <Stepper
+            <>
+              {submitError && (
+                <div role="alert" className="mb-4 rounded-xl border border-destructive/20 bg-destructive/5 p-3">
+                  <p className="text-sm text-destructive text-center">Une erreur est survenue. Veuillez réessayer.</p>
+                </div>
+              )}
+              <Stepper
               initialStep={1}
+              onStepChange={setCurrentStep}
               onFinalStepCompleted={handleSubmit}
               nextDisabled={
-                isSubmitting ||
-                (!isStep1Valid && true)
+                isSubmitting || !isStepValid(currentStep)
               }
               backButtonText="Précédent"
               nextButtonText="Suivant"
@@ -365,6 +396,7 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
                 />
               </Step>
             </Stepper>
+            </>
           )}
         </div>
       </SheetContent>
@@ -402,6 +434,7 @@ function ContactStep({
               id="firstName"
               placeholder="Jean"
               className="pl-9"
+              maxLength={100}
               value={formData.firstName}
               onChange={(e) => updateField("firstName", e.target.value)}
             />
@@ -414,6 +447,7 @@ function ContactStep({
           <Input
             id="lastName"
             placeholder="Dupont"
+            maxLength={100}
             value={formData.lastName}
             onChange={(e) => updateField("lastName", e.target.value)}
           />
@@ -431,6 +465,7 @@ function ContactStep({
             type="email"
             placeholder="jean@entreprise.com"
             className="pl-9"
+            maxLength={320}
             value={formData.email}
             onChange={(e) => updateField("email", e.target.value)}
           />
@@ -449,6 +484,7 @@ function ContactStep({
               type="tel"
               placeholder="+33 6 12 34 56 78"
               className="pl-9"
+              maxLength={30}
               value={formData.phone}
               onChange={(e) => updateField("phone", e.target.value)}
             />
@@ -464,6 +500,7 @@ function ContactStep({
               id="company"
               placeholder="Ma Société"
               className="pl-9"
+              maxLength={200}
               value={formData.company}
               onChange={(e) => updateField("company", e.target.value)}
             />
@@ -481,6 +518,7 @@ function ContactStep({
             id="website"
             placeholder="https://monsite.com"
             className="pl-9"
+            maxLength={500}
             value={formData.website}
             onChange={(e) => updateField("website", e.target.value)}
           />
@@ -526,6 +564,7 @@ function ToolsStep({
             id="currentProcess"
             placeholder="Décrivez vos processus actuels : gestion des clients, suivi des commandes, communication interne..."
             className="min-h-[80px] resize-none"
+            maxLength={2000}
             value={formData.currentProcess}
             onChange={(e) => updateField("currentProcess", e.target.value)}
           />
@@ -539,6 +578,7 @@ function ToolsStep({
             id="painPoints"
             placeholder="Tâches répétitives, perte de temps, erreurs manuelles, manque de visibilité..."
             className="min-h-[80px] resize-none"
+            maxLength={2000}
             value={formData.painPoints}
             onChange={(e) => updateField("painPoints", e.target.value)}
           />
@@ -552,6 +592,7 @@ function ToolsStep({
             id="currentTools"
             placeholder="Excel, Gmail, CRM, logiciel de facturation, réseaux sociaux..."
             className="min-h-[60px] resize-none"
+            maxLength={1000}
             value={formData.currentTools}
             onChange={(e) => updateField("currentTools", e.target.value)}
           />
@@ -565,6 +606,7 @@ function ToolsStep({
             <Input
               id="teamSize"
               placeholder="Ex: 5 personnes"
+              maxLength={100}
               value={formData.teamSize}
               onChange={(e) => updateField("teamSize", e.target.value)}
             />
@@ -576,6 +618,7 @@ function ToolsStep({
             <Input
               id="objectives"
               placeholder="Ex: Automatiser le suivi client"
+              maxLength={1000}
               value={formData.objectives}
               onChange={(e) => updateField("objectives", e.target.value)}
             />
@@ -735,6 +778,7 @@ function DetailsStep({
               : "Décrivez vos processus actuels, les points de friction, vos objectifs de croissance..."
           }
           className="min-h-[120px] resize-none"
+          maxLength={5000}
           value={formData.specificRequests}
           onChange={(e) => updateField("specificRequests", e.target.value)}
         />

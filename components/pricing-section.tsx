@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Check, Zap, Building2, Rocket, type LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import SpotlightCard from "@/components/spotlight-card"
-import { QuoteDrawer, type PlanType } from "@/components/quote-drawer"
+import SpotlightCard from "@/components/ui/spotlight-card"
+import { QuoteDrawer, type PlanType } from "@/components/ui/quote-drawer"
 
 interface PricingTier {
   name: string

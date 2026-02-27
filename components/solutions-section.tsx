@@ -1,7 +1,7 @@
 "use client"
 
 import { Zap, Building2, Rocket } from "lucide-react"
-import SpotlightCard from "@/components/spotlight-card"
+import SpotlightCard from "@/components/ui/spotlight-card"
 
 const solutions = [
   {

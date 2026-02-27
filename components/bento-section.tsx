@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Command } from "lucide-react"
-import LogoLoop from "./LogoLoop"
+import LogoLoop from "@/components/ui/logoloop"
 import { Icon } from '@iconify/react'
 import { cn } from "@/lib/utils"
 import Image from 'next/image'

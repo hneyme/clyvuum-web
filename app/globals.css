@@ -64,26 +64,51 @@
 }
 
 :root {
-  --background: oklch(0.08 0 0);
-  --foreground: oklch(0.95 0.01 250);
-  --card: oklch(0.12 0.005 250);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.12 0.005 250);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.65 0.12 240);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.18 0.01 250);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.2 0.02 250);
-  --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.5 0.2 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.25 0.01 250);
-  --input: oklch(0.2 0.01 250);
-  --ring: oklch(0.65 0.12 240);
+  /* Fallback hex values for browsers that don't support oklch (iOS < 15.4) */
+  --background: #141414;
+  --foreground: #eef0f5;
+  --card: #1e1f24;
+  --card-foreground: #eef0f5;
+  --popover: #1e1f24;
+  --popover-foreground: #eef0f5;
+  --primary: #5b8def;
+  --primary-foreground: #f9f9f9;
+  --secondary: #2a2b33;
+  --secondary-foreground: #eef0f5;
+  --muted: #2a2a2a;
+  --muted-foreground: #8e8e8e;
+  --accent: #303345;
+  --accent-foreground: #eef0f5;
+  --destructive: #c0392b;
+  --destructive-foreground: #f9f9f9;
+  --border: #3a3b45;
+  --input: #2e2f38;
+  --ring: #5b8def;
   --radius: 0.75rem;
+}
+
+@supports (color: oklch(0 0 0)) {
+  :root {
+    --background: oklch(0.08 0 0);
+    --foreground: oklch(0.95 0.01 250);
+    --card: oklch(0.12 0.005 250);
+    --card-foreground: oklch(0.95 0 0);
+    --popover: oklch(0.12 0.005 250);
+    --popover-foreground: oklch(0.95 0 0);
+    --primary: oklch(0.65 0.12 240);
+    --primary-foreground: oklch(0.98 0 0);
+    --secondary: oklch(0.18 0.01 250);
+    --secondary-foreground: oklch(0.95 0 0);
+    --muted: oklch(0.18 0 0);
+    --muted-foreground: oklch(0.6 0 0);
+    --accent: oklch(0.2 0.02 250);
+    --accent-foreground: oklch(0.95 0 0);
+    --destructive: oklch(0.5 0.2 25);
+    --destructive-foreground: oklch(0.98 0 0);
+    --border: oklch(0.25 0.01 250);
+    --input: oklch(0.2 0.01 250);
+    --ring: oklch(0.65 0.12 240);
+  }
 }
 
 
@@ -125,8 +150,10 @@
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   ::selection {
     @apply bg-primary/30 text-primary-foreground;

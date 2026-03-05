@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 
 interface Position {
   x: number
@@ -13,9 +13,6 @@ interface SpotlightCardProps extends React.PropsWithChildren {
   spotlightColor?: string
 }
 
-const isTouchDevice = () =>
-  typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0)
-
 const SpotlightCard: React.FC<SpotlightCardProps> = ({
   children,
   className = "",
@@ -25,9 +22,14 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
   const [opacity, setOpacity] = useState<number>(0)
+  const [isTouch, setIsTouch] = useState(false)
+
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  }, [])
 
   const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    if (!divRef.current || isFocused || isTouchDevice()) return
+    if (!divRef.current || isFocused || isTouch) return
 
     const rect = divRef.current.getBoundingClientRect()
     setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
@@ -44,7 +46,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   }
 
   const handleMouseEnter = () => {
-    if (!isTouchDevice()) setOpacity(0.6)
+    if (!isTouch) setOpacity(0.6)
   }
 
   const handleMouseLeave = () => {
@@ -54,20 +56,22 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   return (
     <div
       ref={divRef}
-      onMouseMove={handleMouseMove}
+      onMouseMove={isTouch ? undefined : handleMouseMove}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={isTouch ? undefined : handleMouseEnter}
+      onMouseLeave={isTouch ? undefined : handleMouseLeave}
       className={`relative rounded-2xl border border-border bg-card overflow-hidden p-6 transition-all duration-300 hover:border-foreground/30 ${className}`}
     >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"
-        style={{
-          opacity,
-          background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
-        }}
-      />
+      {!isTouch && (
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"
+          style={{
+            opacity,
+            background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
+          }}
+        />
+      )}
       {children}
     </div>
   )

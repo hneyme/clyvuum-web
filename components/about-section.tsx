@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useMemo, useEffect, useState } from 'react'
 import type { GlobeConfig } from '@/components/ui/globe'
 
 const World = dynamic(() => import('@/components/ui/globe').then(mod => ({ default: mod.World })), {
@@ -79,6 +80,17 @@ const globeData = [
 ]
 
 export function AboutSection() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  const displayData = useMemo(
+    () => isMobile ? globeData.filter((_, i) => i % 2 === 0) : globeData,
+    [isMobile]
+  )
+
   return (
     <section id="about" className="py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -93,7 +105,7 @@ export function AboutSection() {
           </div>
 
           <div className="relative h-[380px] sm:h-[450px] lg:h-[600px] w-full" role="img" aria-label="Globe animé montrant les connexions mondiales depuis Paris">
-            <World globeConfig={globeConfig} data={globeData} specialPoints={specialPoints} />
+            <World globeConfig={globeConfig} data={displayData} specialPoints={specialPoints} />
           </div>
         </div>
       </div>

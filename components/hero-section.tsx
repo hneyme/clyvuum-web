@@ -12,7 +12,7 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-hidden pt-32 pb-24"
+      className="relative flex min-h-screen min-h-[100dvh] w-full flex-col items-center justify-center overflow-hidden pt-32 pb-24"
     >
       <div className={`container ${containerClass}`}>
         <div className="mx-auto max-w-4xl">

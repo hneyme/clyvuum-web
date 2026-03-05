@@ -25,7 +25,8 @@ export function Navbar() {
   const [hovered, setHovered] = useState<number | null>(null)
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setVisible(latest > 100)
+    const shouldBeVisible = latest > 100
+    if (shouldBeVisible !== visible) setVisible(shouldBeVisible)
   })
 
   const scrollToSection = useCallback((sectionId: string) => {
@@ -156,10 +157,11 @@ export function Navbar() {
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-x-0 top-[4.5rem] z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950 border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="absolute inset-x-0 top-[4.5rem] z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950 border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
             >
               {navItems.map((item) => (
                 <button

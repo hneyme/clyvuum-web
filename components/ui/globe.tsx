@@ -165,9 +165,11 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
       }))]
     }
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
     globeRef.current
       .hexPolygonsData(countries.features)
-      .hexPolygonResolution(3)
+      .hexPolygonResolution(isMobile ? 2 : 3)
       .hexPolygonMargin(0.7)
       .showAtmosphere(defaultProps.showAtmosphere)
       .atmosphereColor(defaultProps.atmosphereColor)
@@ -221,6 +223,9 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
   useEffect(() => {
     if (!globeRef.current || !isInitialized || !data) return
 
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
+    const ringInterval = isMobileDevice ? 3000 : 2000
+
     const interval = setInterval(() => {
       if (!globeRef.current) return
 
@@ -246,7 +251,7 @@ export function Globe({ globeConfig, data, specialPoints }: WorldProps) {
         ])
 
       globeRef.current.ringsData(ringsData)
-    }, 2000)
+    }, ringInterval)
 
     return () => {
       clearInterval(interval)
@@ -261,7 +266,7 @@ export function WebGLRendererConfig() {
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768
-    gl.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2))
+    gl.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
     gl.setSize(size.width, size.height)
     gl.setClearColor(0xffaaff, 0)
   }, [gl, size])
@@ -299,8 +304,12 @@ export function World(props: WorldProps) {
 
   return (
     <div ref={containerRef} className="w-full h-full">
-      {isVisible && (
-        <Canvas scene={scene} camera={camera}>
+      <Canvas
+        scene={scene}
+        camera={camera}
+        frameloop={isVisible ? "always" : "never"}
+        style={{ pointerEvents: isVisible ? "auto" : "none" }}
+      >
       <WebGLRendererConfig />
       <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
       <directionalLight
@@ -328,7 +337,6 @@ export function World(props: WorldProps) {
         maxPolarAngle={Math.PI - Math.PI / 3}
       />
     </Canvas>
-      )}
     </div>
   )
 }

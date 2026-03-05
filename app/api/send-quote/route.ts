@@ -5,8 +5,18 @@ import { z } from 'zod'
 const rateMap = new Map<string, { count: number; reset: number }>()
 const RATE_LIMIT = 5
 const RATE_WINDOW_MS = 60_000
+const RATE_MAP_MAX = 10_000
+
+function pruneRateMap() {
+  if (rateMap.size <= RATE_MAP_MAX) return
+  const now = Date.now()
+  for (const [key, entry] of rateMap) {
+    if (now > entry.reset) rateMap.delete(key)
+  }
+}
 
 function isRateLimited(ip: string): boolean {
+  pruneRateMap()
   const now = Date.now()
   const entry = rateMap.get(ip)
   if (!entry || now > entry.reset) {

@@ -209,6 +209,7 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
 
   const resetForm = useCallback(() => {
     setFormData(initialFormData)
+    setCurrentStep(1)
     setIsSubmitting(false)
     setIsSubmitted(false)
     setSubmitError(false)

@@ -57,7 +57,7 @@ export function Navbar() {
         className={cn(
           "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex",
           "transition-[backdrop-filter,box-shadow,background-color,border-color] duration-300",
-          visible && "bg-neutral-950/80 border border-white/[0.06] backdrop-blur-md shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset]"
+          visible && "bg-neutral-950/80 ring-1 ring-white/8 backdrop-blur-md shadow-lg"
         )}
       >
         <button
@@ -116,7 +116,7 @@ export function Navbar() {
         className={cn(
           "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between rounded-full bg-transparent px-4 py-3 lg:hidden",
           "transition-[backdrop-filter,box-shadow,background-color,border-color] duration-300",
-          visible && "bg-neutral-950/80 border border-white/[0.06] backdrop-blur-md shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset]"
+          visible && "bg-neutral-950/80 ring-1 ring-white/8 backdrop-blur-md shadow-lg"
         )}
       >
         <div className="flex w-full items-center justify-between">

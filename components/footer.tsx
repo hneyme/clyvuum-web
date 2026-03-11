@@ -39,7 +39,7 @@ export function Footer() {
               />
             </a>
 
-            <nav aria-label="Liens du pied de page" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <nav aria-label="Liens du pied de page" className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-2">
               {footerLinks.map((link) => (
                 <button
                   key={link.sectionId}

@@ -1,9 +1,16 @@
 "use client"
 
-import { Zap, Building2, Rocket } from "lucide-react"
+import { Zap, Building2, Rocket, type LucideIcon } from "lucide-react"
 import SpotlightCard from "@/components/ui/spotlight-card"
+import { AnimatedIcon } from "@/components/ui/animated-icon"
 
-const solutions = [
+interface Solution {
+  icon: LucideIcon
+  title: string
+  description: string
+}
+
+const solutions: Solution[] = [
   {
     icon: Zap,
     title: "Starter",
@@ -41,20 +48,20 @@ export function SolutionsSection() {
               className="!p-3 md:!p-4 !rounded-3xl !border-neutral-800 !bg-neutral-900 w-full hover:shadow-lg hover:scale-[1.01] transition-transform duration-200"
               spotlightColor="rgba(255,255,255,0.06)"
             >
-              <div className="w-full px-3 py-2 md:px-4 md:py-2 flex items-start gap-3 md:gap-4">
-                <div className="flex-shrink-0 mt-0.5">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary/15">
-                    <solution.icon className="h-5 w-5 text-primary" />
-                  </div>
-                </div>
-                <div className="flex-grow min-w-0">
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-0.5">
+              <div className="w-full px-3 py-2 md:px-4 md:py-2">
+                <div className="flex items-center justify-between mb-1.5">
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground">
                     {solution.title}
                   </h3>
-                  <p className="text-sm md:text-base text-muted-foreground leading-snug">
-                    {solution.description}
-                  </p>
+                  <AnimatedIcon
+                    icon={solution.icon}
+                    className="h-4 w-4"
+                    containerClassName="h-8 w-8 flex-shrink-0 ml-4"
+                  />
                 </div>
+                <p className="text-sm md:text-base text-muted-foreground leading-snug pr-2 sm:pr-6 md:pr-12">
+                  {solution.description}
+                </p>
               </div>
             </SpotlightCard>
           ))}

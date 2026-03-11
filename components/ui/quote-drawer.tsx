@@ -334,7 +334,7 @@ export function QuoteDrawer({ plan, open, onOpenChange }: QuoteDrawerProps) {
           )}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
               <PlanIcon className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -737,34 +737,25 @@ function DetailsStep({
           : "Décrivez vos besoins pour préparer votre audit personnalisé."}
       </p>
 
-      <div className="space-y-2">
-        <Label htmlFor="budget" className="text-sm">
-          Budget estimé
-        </Label>
-        <select
-          id="budget"
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
-          value={formData.budget}
-          onChange={(e) => updateField("budget", e.target.value)}
-        >
-          <option value="" className="bg-background">Sélectionnez un budget</option>
-          {plan === "starter" ? (
-            <>
-              <option value="500-1000" className="bg-background">500€ - 1 000€</option>
-              <option value="1000-1500" className="bg-background">1 000€ - 1 500€</option>
-              <option value="1500-2000" className="bg-background">1 500€ - 2 000€</option>
-              <option value="2000+" className="bg-background">2 000€ +</option>
-            </>
-          ) : (
-            <>
-              <option value="2000-3000" className="bg-background">2 000€ - 3 000€</option>
-              <option value="3000-5000" className="bg-background">3 000€ - 5 000€</option>
-              <option value="5000-10000" className="bg-background">5 000€ - 10 000€</option>
-              <option value="10000+" className="bg-background">10 000€ +</option>
-            </>
-          )}
-        </select>
-      </div>
+      {plan === "business" && (
+        <div className="space-y-2">
+          <Label htmlFor="budget" className="text-sm">
+            Budget estimé
+          </Label>
+          <select
+            id="budget"
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
+            value={formData.budget}
+            onChange={(e) => updateField("budget", e.target.value)}
+          >
+            <option value="" className="bg-background">Sélectionnez un budget</option>
+            <option value="2000-3000" className="bg-background">2 000€ - 3 000€</option>
+            <option value="3000-5000" className="bg-background">3 000€ - 5 000€</option>
+            <option value="5000-10000" className="bg-background">5 000€ - 10 000€</option>
+            <option value="10000+" className="bg-background">10 000€ +</option>
+          </select>
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="timeline" className="text-sm">

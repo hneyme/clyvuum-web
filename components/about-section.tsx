@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import type { GlobeConfig } from '@/components/ui/globe'
 
 const World = dynamic(() => import('@/components/ui/globe').then(mod => ({ default: mod.World })), {
@@ -79,12 +79,15 @@ const globeData = [
   { order: 41, startLat: PARIS.lat, startLng: PARIS.lng, endLat: 30.0444, endLng: 31.2357, arcAlt: 0.25, color: '#ffffff' },
 ]
 
-export function AboutSection() {
-  const [isMobile, setIsMobile] = useState(false)
+const subscribeResize = (cb: () => void) => {
+  window.addEventListener('resize', cb)
+  return () => window.removeEventListener('resize', cb)
+}
+const getIsMobile = () => window.innerWidth < 768
+const getIsMobileServer = () => false
 
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
-  }, [])
+export function AboutSection() {
+  const isMobile = useSyncExternalStore(subscribeResize, getIsMobile, getIsMobileServer)
 
   const displayData = useMemo(
     () => isMobile ? globeData.filter((_, i) => i % 2 === 0) : globeData,

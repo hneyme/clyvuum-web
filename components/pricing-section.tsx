@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Zap, Building2, Rocket, type LucideIcon } from "lucide-react"
+import { Check, Zap, Building2, Rocket, Wrench, type LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import SpotlightCard from "@/components/ui/spotlight-card"
 import { QuoteDrawer, type PlanType } from "@/components/ui/quote-drawer"
+import { AnimatedIcon } from "@/components/ui/animated-icon"
 
 interface PricingTier {
   name: string
@@ -19,7 +20,7 @@ interface PricingTier {
 const pricingTiers: PricingTier[] = [
   {
     name: "Starter",
-    price: "À partir de 500€",
+    price: "500€",
     priceSubtext: "Audit de faisabilité inclus",
     icon: Zap,
     features: [
@@ -104,16 +105,18 @@ export function PricingSection() {
                   <h3 className="text-lg md:text-xl font-semibold text-foreground">
                     {tier.name}
                   </h3>
-                  <div className="flex items-center justify-center h-8 w-8 rounded-md bg-primary/15">
-                    <tier.icon className="h-4 w-4 text-primary" />
-                  </div>
+                  <AnimatedIcon
+                    icon={tier.icon}
+                    className="h-5 w-5"
+                    containerClassName="h-10 w-10"
+                  />
                 </div>
 
                 <div className="space-y-2.5 mb-6 flex-1">
                   {tier.features.map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-2.5">
                       <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground text-base">{feature}</span>
+                      <span className="text-muted-foreground text-sm md:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -133,6 +136,38 @@ export function PricingSection() {
             </SpotlightCard>
           ))}
         </div>
+
+        <SpotlightCard
+          className="group relative transition-all duration-300 mt-6 lg:mt-8"
+          spotlightColor="rgba(59, 130, 246, 0.15)"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground">
+              Maintenance & suivi
+            </h3>
+            <AnimatedIcon
+              icon={Wrench}
+              className="h-5 w-5"
+              containerClassName="h-10 w-10"
+            />
+          </div>
+
+          <div className="mb-6 space-y-2">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              Chaque projet livré peut s&apos;accompagner d&apos;un suivi continu : mises à jour, optimisations de performance et support technique. <br/> Les modalités et le tarif sont définis ensemble, sur rendez-vous, en fonction de vos besoins.
+            </p>
+          </div>
+
+          <Button
+            onClick={() => {
+              const contact = document.getElementById("contact")
+              if (contact) contact.scrollIntoView({ behavior: "smooth" })
+            }}
+            className="w-full py-5 bg-primary/10 text-primary hover:bg-primary/20"
+          >
+            <span className="text-sm font-semibold">En savoir plus</span>
+          </Button>
+        </SpotlightCard>
       </div>
 
       <QuoteDrawer

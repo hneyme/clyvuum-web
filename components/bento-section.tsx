@@ -79,7 +79,6 @@ function FeatureThree() {
             { node: <Icon icon="fa6-brands:apple" width="32" height="32" className="text-foreground/90" />, title: 'Apple' },
             { node: <Icon icon="fa6-brands:windows" width="32" height="32" className="text-foreground/90" />, title: 'Windows' },
             { node: <Icon icon="fa6-brands:android" width="32" height="32" className="text-foreground/90" />, title: 'Android' },
-            { node: <Icon icon="fa6-brands:zoom" width="32" height="32" className="text-foreground/90" />, title: 'Zoom' },
             { node: <Icon icon="fa6-brands:mailchimp" width="32" height="32" className="text-foreground/90" />, title: 'Mailchimp' },
             { node: <Icon icon="fa6-brands:google-drive" width="32" height="32" className="text-foreground/90" />, title: 'Google Drive' },
             { node: <Icon icon="fa6-brands:stripe" width="32" height="32" className="text-foreground/90" />, title: 'Stripe' },

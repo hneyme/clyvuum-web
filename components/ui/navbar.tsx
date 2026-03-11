@@ -82,7 +82,7 @@ export function Navbar() {
               key={item.sectionId}
               onMouseEnter={() => setHovered(idx)}
               onClick={() => scrollToSection(item.sectionId)}
-              className="relative px-4 py-2 text-neutral-300"
+              className="relative px-4 py-2 text-muted-foreground"
             >
               {hovered === idx && (
                 <motion.div
@@ -140,7 +140,7 @@ export function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="p-1"
             >
-              <IconX className="h-6 w-6 text-white" />
+              <IconX className="h-6 w-6 text-foreground" />
             </button>
           ) : (
             <button
@@ -149,7 +149,7 @@ export function Navbar() {
               onClick={() => setMobileOpen(true)}
               className="p-1"
             >
-              <IconMenu2 className="h-6 w-6 text-white" />
+              <IconMenu2 className="h-6 w-6 text-foreground" />
             </button>
           )}
         </div>
@@ -161,13 +161,13 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute inset-x-0 top-[4.5rem] z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-neutral-950 border border-white/[0.08] px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
+              className="absolute inset-x-0 top-[4.5rem] z-50 mx-2 flex w-auto flex-col gap-2 rounded-2xl bg-card border border-border px-4 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
             >
               {navItems.map((item) => (
                 <button
                   key={item.sectionId}
                   onClick={() => scrollToSection(item.sectionId)}
-                  className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors"
+                  className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
                   {item.name}
                 </button>

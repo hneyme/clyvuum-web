@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useSyncExternalStore, useCallback } from "react"
 
 interface Position {
   x: number
@@ -22,18 +22,26 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
   const [opacity, setOpacity] = useState<number>(0)
-  const [isTouch, setIsTouch] = useState(false)
+  const isTouch = useSyncExternalStore(
+    () => () => {},
+    () => "ontouchstart" in window || navigator.maxTouchPoints > 0,
+    () => false
+  )
+  const tickingRef = useRef(false)
 
-  useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0)
-  }, [])
-
-  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    if (!divRef.current || isFocused || isTouch) return
-
-    const rect = divRef.current.getBoundingClientRect()
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-  }
+  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = useCallback((e) => {
+    if (!divRef.current || isFocused || isTouch || tickingRef.current) return
+    tickingRef.current = true
+    const clientX = e.clientX
+    const clientY = e.clientY
+    requestAnimationFrame(() => {
+      if (divRef.current) {
+        const rect = divRef.current.getBoundingClientRect()
+        setPosition({ x: clientX - rect.left, y: clientY - rect.top })
+      }
+      tickingRef.current = false
+    })
+  }, [isFocused, isTouch])
 
   const handleFocus = () => {
     setIsFocused(true)
